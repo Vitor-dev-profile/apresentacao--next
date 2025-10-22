@@ -1,103 +1,164 @@
+"use client";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import IntroSlide from "./components/IntroSlide";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import WebHistorySlide from "./components/WebHistorySlide";
+import SPAProblemsSlide from "./components/SPAProblemsSlide";
+import NextJsIntroSlide from "./components/NextJsIntroSlide";
+import AppRouterSlide from "./components/AppRouterSlide";
+import RSCIntroSlide from "./components/RSCIntroSlide";
+import RSCvsClientSlide from "./components/RSCvsClientSlide";
+import UseClientDirectiveSlide from "./components/UseClientDirectiveSlide";
+import WhenToUseSlide from "./components/WhenToUseSlide";
+import DataFetchingSlide from "./components/DataFetchingSlide";
+import InteractivitySlide from "./components/InteractivitySlide";
+import WrapUpSlide from "./components/WrapUpSlide";
+import CSRVideoSlide from "./components/CSRVideoSlide";
+import SSRVideoSlide from "./components/SSRVideoSlide";
+import StaticVideoSlide from "./components/StaticVideoSlide";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [direction, setDirection] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const slides = [
+    { id: 0, component: IntroSlide, title: "Introdução" },
+    { id: 1, component: WebHistorySlide, title: "Contexto Histórico" },
+    { id: 3, component: StaticVideoSlide, title: "Static Site" }, // Novo slide
+    { id: 3, component: CSRVideoSlide, title: "Demo: CSR em Ação" }, // Novo slide
+    { id: 4, component: SSRVideoSlide, title: "Demo: SSR em Ação" }, // Novo slide
+    { id: 2, component: SPAProblemsSlide, title: "Problemas das SPAs" },
+    { id: 5, component: NextJsIntroSlide, title: "O que é Next.js?" },
+    { id: 6, component: AppRouterSlide, title: "App Router" },
+    { id: 7, component: RSCIntroSlide, title: "Server Components" },
+    { id: 8, component: RSCvsClientSlide, title: "RSC vs Client Components" },
+    { id: 9, component: UseClientDirectiveSlide, title: "use client" },
+    { id: 10, component: WhenToUseSlide, title: "Quando Usar?" },
+    { id: 11, component: InteractivitySlide, title: "Interatividade" },
+    { id: 12, component: WrapUpSlide, title: "Conclusão" },
+  ];
+
+  const nextSlide = () => {
+    if (currentSlide < slides.length - 1) {
+      setDirection(1);
+      setCurrentSlide(currentSlide + 1);
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentSlide > 0) {
+      setDirection(-1);
+      setCurrentSlide(currentSlide - 1);
+    }
+  };
+
+  const goToSlide = (index: number) => {
+    setDirection(index > currentSlide ? 1 : -1);
+    setCurrentSlide(index);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight" || e.key === " ") {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        goToSlide(0);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        goToSlide(slides.length - 1);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentSlide]);
+
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      x: direction > 0 ? -1000 : 1000,
+      opacity: 0,
+    }),
+  };
+
+  const CurrentSlideComponent = slides[currentSlide].component;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden">
+      <div className="relative h-screen flex flex-col">
+        <div className="flex-1 relative">
+          <AnimatePresence initial={false} custom={direction} mode="wait">
+            <motion.div
+              key={currentSlide}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              className="absolute inset-0"
+            >
+              <CurrentSlideComponent />
+            </motion.div>
+          </AnimatePresence>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div className="absolute bottom-8 left-0 right-0 z-50">
+          <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
+            <button
+              onClick={prevSlide}
+              disabled={currentSlide === 0}
+              className="p-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            >
+              <ChevronLeft size={32} />
+            </button>
+
+            <div className="flex gap-3">
+              {slides.map((slide, index) => (
+                <button
+                  key={slide.id}
+                  onClick={() => goToSlide(index)}
+                  className={`transition-all ${
+                    index === currentSlide
+                      ? "w-16 bg-blue-500"
+                      : "w-3 bg-white/30 hover:bg-white/50"
+                  } h-3 rounded-full`}
+                  title={slide.title}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={nextSlide}
+              disabled={currentSlide === slides.length - 1}
+              className="p-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            >
+              <ChevronRight size={32} />
+            </button>
+          </div>
+        </div>
+
+        <div className="absolute top-8 right-8 z-50 text-xl font-mono text-white/60">
+          {currentSlide + 1} / {slides.length}
+        </div>
+      </div>
     </div>
   );
 }
