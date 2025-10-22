@@ -18,6 +18,7 @@ import WrapUpSlide from "./components/WrapUpSlide";
 import CSRVideoSlide from "./components/CSRVideoSlide";
 import SSRVideoSlide from "./components/SSRVideoSlide";
 import StaticVideoSlide from "./components/StaticVideoSlide";
+import UnknownWords from "./components/UnknownWords";
 
 export default function Home() {
   const [direction, setDirection] = useState(0);
@@ -25,6 +26,7 @@ export default function Home() {
 
   const slides = [
     { id: 0, component: IntroSlide, title: "Introdução" },
+    { id: 13, component: UnknownWords, title: "Palavras desconhecidas" },
     { id: 1, component: WebHistorySlide, title: "Contexto Histórico" },
     { id: 3, component: StaticVideoSlide, title: "Static Site" }, // Novo slide
     { id: 3, component: CSRVideoSlide, title: "Demo: CSR em Ação" }, // Novo slide

@@ -20,6 +20,7 @@ export default function WebHistorySlide() {
       icon: Globe,
       description: "HTML puro, páginas estáticas, sem interatividade",
       color: "text-gray-400",
+      example: "https://meusite.com.br/~vitor/arquivo.html",
       image: "/images/web-estatica.png",
     },
     {
@@ -102,9 +103,11 @@ export default function WebHistorySlide() {
                 alt={selected.title}
                 className="rounded-xl  border border-white/10 min-w-4xl"
               />
-              {/* <p className="text-gray-400 text-lg mt-4">
-                {selected.description}
-              </p> */}
+              {!!selected?.example && (
+                <p className="text-black text-2xl text-center mt-4 font-bold">
+                  {selected?.example}
+                </p>
+              )}
             </>
           )}
         </DialogContent>
